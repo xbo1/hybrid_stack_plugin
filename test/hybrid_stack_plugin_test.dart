@@ -16,6 +16,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await HybridStackPlugin.platformVersion, '42');
+    expect(await HybridStackPlugin.instance.platformVersion, '42');
   });
 }

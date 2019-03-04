@@ -4,9 +4,23 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MyHome());
+
+int pageId = 0;
+
+class MyHome extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MyApp(pageId: pageId,),
+    );
+  }
+
+}
 
 class MyApp extends StatefulWidget {
+  final int pageId;
+  MyApp({this.pageId});
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -25,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await HybridStackPlugin.platformVersion;
+      platformVersion = await HybridStackPlugin.instance.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -42,13 +56,35 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    int pid = widget.pageId;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: Text('flutter page id=$pid'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: ListView(
+            children: <Widget>[
+              ListTile(
+                title: Text('This is a Flutter Page, Running on: $_platformVersion'),
+              ),
+              ListTile(
+                title: Text('Open Flutter Page'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    pageId++;
+                    return MyApp(pageId: pageId,);
+                  }));
+                },
+              ),
+              ListTile(
+                title: Text('Open Native Page'),
+                onTap: () {
+                  //TODO
+                },
+              )
+            ],
+          )
         ),
       ),
     );
