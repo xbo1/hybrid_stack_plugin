@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:hybrid_stack_plugin/router.dart';
 
 class HybridStackPlugin {
   static HybridStackPlugin _singleton;
@@ -23,8 +24,12 @@ class HybridStackPlugin {
     return version;
   }
 
-  pushNativePage() {
-
+  pushNativePage(String pageId, Map args) async {
+    int result = await _channel.invokeMethod('pushNativePage', {
+      'pageId':pageId,
+      'args':args
+    });
+    return result;
   }
   popNativePage() {
 
@@ -37,7 +42,7 @@ class HybridStackPlugin {
       switch (methodName) {
         case "pushFlutterPage": {
           Map args = call.arguments;
-
+          HSRouter.instance.push(pageId: args['pageId']);
           break;
         }
         case "requestUpdateTheme": {

@@ -3,6 +3,8 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
+import 'package:hybrid_stack_plugin/router.dart';
+import 'package:hybrid_stack_plugin_example/Demo2.dart';
 
 void main() => runApp(MyHome());
 
@@ -11,7 +13,18 @@ int pageId = 0;
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
+    HSRouter.init(key: navKey);
+    HSRouter.instance.addRoute('demo', (BuildContext context) {
+      pageId++;
+      return MyApp(pageId: pageId,);
+    });
+    HSRouter.instance.addRoute('demo2', (BuildContext context) {
+      pageId++;
+      return Demo2(pageId: pageId,);
+    });
     return MaterialApp(
+      navigatorKey: navKey,
       home: MyApp(pageId: pageId,),
     );
   }
@@ -80,7 +93,7 @@ class _MyAppState extends State<MyApp> {
               ListTile(
                 title: Text('Open Native Page'),
                 onTap: () {
-                  //TODO
+                  HybridStackPlugin.instance.pushNativePage("demo", {});
                 },
               )
             ],
