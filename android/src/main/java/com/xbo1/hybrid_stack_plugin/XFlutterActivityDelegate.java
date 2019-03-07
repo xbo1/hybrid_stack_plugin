@@ -169,7 +169,8 @@ public final class XFlutterActivityDelegate
                 addLaunchView();
             }
         }
-
+    }
+    public void runBundle() {
         if (loadIntent(activity.getIntent())) {
             return;
         }
