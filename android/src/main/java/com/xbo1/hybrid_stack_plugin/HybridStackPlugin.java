@@ -1,5 +1,6 @@
 package com.xbo1.hybrid_stack_plugin;
 
+import android.content.Context;
 import android.content.Intent;
 
 import java.util.HashMap;
@@ -15,19 +16,11 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class HybridStackPlugin implements MethodCallHandler {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-//    channel = new MethodChannel(registrar.messenger(), "hybrid_stack_plugin");
-//    channel.setMethodCallHandler(new  HybridStackPlugin());
     if (instance == null) {
       getInstance();
-      // unregister instance
-//      instance.channel.setMethodCallHandler(null);
-//      instance = null;
     }
-//    if (instance.channel == null) {
-      instance.channel = new MethodChannel(registrar.messenger(), "hybrid_stack_plugin");
-      instance.channel.setMethodCallHandler(instance);
-//    }
-//    instance = new HybridStackPlugin(registrar);
+    instance.channel = new MethodChannel(registrar.messenger(), "hybrid_stack_plugin");
+    instance.channel.setMethodCallHandler(instance);
   }
   private HybridStackPlugin() {
 
@@ -35,13 +28,28 @@ public class HybridStackPlugin implements MethodCallHandler {
   private static HybridStackPlugin instance;
   public static synchronized HybridStackPlugin getInstance() {
     if (instance == null) {
-//      throw new IllegalStateException("Must register plugin first");
       instance = new HybridStackPlugin();
     }
     return instance;
   }
   private MethodChannel channel;
-  public void openFlutterPage(String pageId, HashMap<String, Object> args) {
+  public void addRoute(String pageId, Class clazz) {
+    HSRouter.sharedInstance().addRoute(pageId, clazz);
+  }
+  public void pushFlutterPage(Context context, String pageId, HashMap<String, Object> args) {
+    HSRouter.sharedInstance().openFlutterPage(context, pageId, args);
+  }
+  void popFlutterPage(Result result) {
+    if (channel != null) {
+      channel.invokeMethod("popFlutterPage", null, result);
+    }
+    else if (result != null){
+      result.error("-1", "channel is null", null);
+    }
+  }
+
+  //flutter 内部路由
+  void showFlutterPage(String pageId, HashMap<String, Object> args) {
     if (channel != null) {
       HashMap<String, Object> channelArgs = new HashMap<>();
       channelArgs.put("args", args);
@@ -50,7 +58,6 @@ public class HybridStackPlugin implements MethodCallHandler {
       channel.invokeMethod("pushFlutterPage", channelArgs, null);
     }
   }
-
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     String method = call.method;

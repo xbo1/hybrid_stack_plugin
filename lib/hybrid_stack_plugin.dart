@@ -53,9 +53,9 @@ class HybridStackPlugin {
 //          }
           break;
         }
-        case "onBackPressed": {
-          /// 这里重写了 onBackPressed 是防止出现黑屏无法返回退出的情况
-//          return VDRouter.instance.onBackPressed();
+        case "popFlutterPage": {
+          /// 重写 onBackPressed
+          return true; //能pop返回true,否则返回false
         }
       }
     });

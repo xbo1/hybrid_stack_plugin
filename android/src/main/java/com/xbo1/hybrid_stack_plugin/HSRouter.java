@@ -16,14 +16,14 @@ public class HSRouter {
         return sRouterInst;
     }
     Map<String,Class> routes = new HashMap<>();
-    public void setAppContext(Context context){
+    void setAppContext(Context context){
         mAppContext = context;
     }
-    public void addRoute(String pageId, Class clazz) {
+    void addRoute(String pageId, Class clazz) {
         routes.put(pageId, clazz);
     }
 
-    public void openNativePage(String pageId, HashMap<String, Object> args) {
+    void openNativePage(String pageId, HashMap<String, Object> args) {
         if (!routes.containsKey(pageId)) {
             return;
         }
@@ -32,5 +32,12 @@ public class HSRouter {
 //        intent.setAction(Intent.ACTION_VIEW);
         intent.putExtra("args", args);
         mAppContext.startActivity(intent);
+    }
+
+    void openFlutterPage(Context context, String pageId, HashMap<String, Object> args) {
+        Intent intent = new Intent(context, HSFlutterActivity.class);
+        intent.putExtra("args", args);
+        intent.putExtra("pageId", pageId);
+        context.startActivity(intent);
     }
 }

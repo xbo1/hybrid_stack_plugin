@@ -19,11 +19,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import io.flutter.app.FlutterActivityEvents;
+import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.view.FlutterNativeView;
 import io.flutter.view.FlutterView;
 import com.xbo1.hybrid_stack_plugin.XFlutterActivityDelegate.ViewFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -120,6 +122,7 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
         super.onCreate(savedInstanceState);
         boolean firstLaunch = nativeView == null;
         initDelegate();
+        HSRouter.sharedInstance().setAppContext(this);
         eventDelegate.onCreate(savedInstanceState);
 
         if (firstLaunch) {
@@ -200,9 +203,25 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
 
     @Override
     public void onBackPressed() {
-        if (!eventDelegate.onBackPressed()) {
-            super.onBackPressed();
-        }
+//        if (!eventDelegate.onBackPressed()) {
+//            super.onBackPressed();
+//        }
+        HybridStackPlugin.getInstance().popFlutterPage(new MethodChannel.Result() {
+            @Override
+            public void success(Object o) {
+                if (!(o instanceof Boolean) || !((Boolean) o)) {
+                    HSFlutterActivity.super.onBackPressed();
+                }
+            }
+            @Override
+            public void error(String s, String s1, Object o) {
+                HSFlutterActivity.super.onBackPressed();
+            }
+            @Override
+            public void notImplemented() {
+                HSFlutterActivity.super.onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -317,16 +336,15 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
 
     protected void openFlutter(Intent intent){
         Bundle bundle = intent.getExtras();
-//        Uri uri = intent.getData();
-//        HashMap arguments = new HashMap();
-//        if(uri!=null){
-//            arguments = HybridStackManager.assembleChanArgs(uri.toString(),null,null);
-//            HybridStackManager.sharedInstance().openUrlFromFlutter(uri.toString(),null,null);
-//        }
-//        else if(bundle!=null && intent.getStringExtra("url")!=null){
-//            arguments = HybridStackManager.assembleChanArgs(intent.getStringExtra("url"),(HashMap)intent.getSerializableExtra("query"),(HashMap)intent.getSerializableExtra("params"));
-//            HybridStackManager.sharedInstance().openUrlFromFlutter(intent.getStringExtra("url"),(HashMap)intent.getSerializableExtra("query"),(HashMap)intent.getSerializableExtra("params"));
-//        }
-//        HybridStackManager.sharedInstance().mainEntryParams = arguments;
+        HashMap<String, Object> args = new HashMap<>();
+        String pageId = "";
+        if (bundle != null) {
+            pageId = bundle.getString("pageId");
+            Serializable intentArgs = bundle.getSerializable("args");
+            if (intentArgs instanceof HashMap) {
+                args = (HashMap<String, Object>)intentArgs;
+            }
+        }
+        HybridStackPlugin.getInstance().showFlutterPage(pageId, args);
     }
 }
