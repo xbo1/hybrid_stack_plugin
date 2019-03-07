@@ -1,6 +1,5 @@
 package com.xbo1.hybrid_stack_plugin_example;
 
-import android.app.Application;
 
 import com.xbo1.hybrid_stack_plugin.HSRouter;
 

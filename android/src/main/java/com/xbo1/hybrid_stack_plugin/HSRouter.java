@@ -17,22 +17,20 @@ public class HSRouter {
     }
     Map<String,Class> routes = new HashMap<>();
     public void setAppContext(Context context){
-//        if (mAppContext != null) {
-//            return;
-//        }
         mAppContext = context;
     }
     public void addRoute(String pageId, Class clazz) {
         routes.put(pageId, clazz);
     }
 
-    public void openNativePage(String pageId) {
+    public void openNativePage(String pageId, HashMap<String, Object> args) {
         if (!routes.containsKey(pageId)) {
             return;
         }
         Intent intent = new Intent(mAppContext,routes.get(pageId));
 //        intent.setData(Uri.parse(url));
-        intent.setAction(Intent.ACTION_VIEW);
+//        intent.setAction(Intent.ACTION_VIEW);
+        intent.putExtra("args", args);
         mAppContext.startActivity(intent);
     }
 }

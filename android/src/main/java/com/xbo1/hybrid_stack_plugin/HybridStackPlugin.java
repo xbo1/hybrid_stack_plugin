@@ -3,6 +3,7 @@ package com.xbo1.hybrid_stack_plugin;
 import android.content.Intent;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -16,13 +17,16 @@ public class HybridStackPlugin implements MethodCallHandler {
   public static void registerWith(Registrar registrar) {
 //    channel = new MethodChannel(registrar.messenger(), "hybrid_stack_plugin");
 //    channel.setMethodCallHandler(new  HybridStackPlugin());
-    if (instance != null) {
+    if (instance == null) {
+      getInstance();
       // unregister instance
-      instance.channel = new MethodChannel(registrar.messenger(), "hybrid_stack_plugin");
-      instance.channel.setMethodCallHandler(instance);
 //      instance.channel.setMethodCallHandler(null);
 //      instance = null;
     }
+//    if (instance.channel == null) {
+      instance.channel = new MethodChannel(registrar.messenger(), "hybrid_stack_plugin");
+      instance.channel.setMethodCallHandler(instance);
+//    }
 //    instance = new HybridStackPlugin(registrar);
   }
   private HybridStackPlugin() {
@@ -53,7 +57,8 @@ public class HybridStackPlugin implements MethodCallHandler {
     switch (method) {
       case "pushNativePage":
         String pageId = call.argument("pageId");
-        HSRouter.sharedInstance().openNativePage(pageId);
+        HashMap<String, Object> args = call.arguments();
+        HSRouter.sharedInstance().openNativePage(pageId, args);
         result.success(0);
         break;
       case "getPlatformVersion":
@@ -62,10 +67,5 @@ public class HybridStackPlugin implements MethodCallHandler {
       default:
         result.notImplemented();
     }
-//    if (call.method.equals("getPlatformVersion")) {
-//      result.success("Android " + android.os.Build.VERSION.RELEASE);
-//    } else {
-//      result.notImplemented();
-//    }
   }
 }

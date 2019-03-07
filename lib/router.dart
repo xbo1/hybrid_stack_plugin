@@ -31,6 +31,7 @@ class HSRouter {
 
   Future<dynamic> push({String pageId}) async {
     /// open the route
+    print('push page: $pageId');
     var builder = _routes[pageId];
     if (builder == null) {
       builder = (context)=>_RouteNotFoundPage();
