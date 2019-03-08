@@ -45,8 +45,8 @@ class HybridStackPlugin {
       switch (methodName) {
         case "pushFlutterPage": {
           Map args = call.arguments;
-          HSRouter.instance.push(pageId: args['pageId'], args:args['args']);
-          break;
+          var ret = await HSRouter.instance.push(pageId: args['pageId'], args:args['args']);
+          return ret;
         }
         case "requestUpdateTheme": {
           // 请求更新主题色到 native 端，这里使用了一个测试接口，以后要注意

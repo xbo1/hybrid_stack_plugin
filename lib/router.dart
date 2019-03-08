@@ -46,9 +46,9 @@ class HSRouter {
     var pageRoute = MaterialPageRoute(builder: (context) {
       return builder(context, args);
     });
-    final navState = _navigatorStateKey?.currentState;
-    navState.push(pageRoute);
     _firstRoutes[pageRoute] = pageId;
+    final navState = _navigatorStateKey?.currentState;
+    return navState.push(pageRoute);
   }
 
 

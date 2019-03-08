@@ -122,7 +122,6 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
         super.onCreate(savedInstanceState);
         boolean firstLaunch = nativeView == null;
         initDelegate();
-        HSRouter.sharedInstance().setAppContext(getApplicationContext());
         HSRouter.sharedInstance().pushFlutterActivity(this);
         eventDelegate.onCreate(savedInstanceState);
 
@@ -263,6 +262,11 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (isFlutterViewAttachedOnMe() && !eventDelegate.onActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
+            //从Native返回的
+            if (requestCode == HSRouter.FLUTTER_REQUEST && data != null) {
+                // data.getSerializableExtra("args");
+
+            }
         }
     }
 
@@ -347,6 +351,21 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
                 args = (HashMap<String, Object>)intentArgs;
             }
         }
-        HybridStackPlugin.getInstance().showFlutterPage(pageId, args);
+        HybridStackPlugin.getInstance().showFlutterPage(pageId, args, new MethodChannel.Result() {
+            @Override
+            public void success(Object o) {
+
+            }
+
+            @Override
+            public void error(String s, String s1, Object o) {
+
+            }
+
+            @Override
+            public void notImplemented() {
+
+            }
+        });
     }
 }

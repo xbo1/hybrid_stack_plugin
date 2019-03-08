@@ -1,5 +1,6 @@
 package com.xbo1.hybrid_stack_plugin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -36,8 +37,8 @@ public class HybridStackPlugin implements MethodCallHandler {
   public void addRoute(String pageId, Class clazz) {
     HSRouter.sharedInstance().addRoute(pageId, clazz);
   }
-  public void pushFlutterPage(Context context, String pageId, HashMap<String, Object> args) {
-    HSRouter.sharedInstance().openFlutterPage(context, pageId, args);
+  public void pushFlutterPage(Activity activity, String pageId, HashMap<String, Object> args) {
+    HSRouter.sharedInstance().openFlutterPage(activity, pageId, args);
   }
   void popFlutterPage(Result result) {
     if (channel != null) {
@@ -49,19 +50,21 @@ public class HybridStackPlugin implements MethodCallHandler {
   }
 
   //flutter 内部路由
-  void showFlutterPage(String pageId, HashMap<String, Object> args) {
+  void showFlutterPage(String pageId, HashMap<String, Object> args, Result result) {
     if (channel != null) {
       initArgs = args;
       initPageId = pageId;
+      initResult = result;
       HashMap<String, Object> channelArgs = new HashMap<>();
       channelArgs.put("args", args);
 //      channelArgs.put("pageName", pageName);
       channelArgs.put("pageId", pageId);
-      channel.invokeMethod("pushFlutterPage", channelArgs, null);
+      channel.invokeMethod("pushFlutterPage", channelArgs, result);
     }
   }
   private HashMap<String, Object> initArgs = new HashMap<>();
   private String initPageId = "";
+  private Result initResult = null;
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     String method = call.method;
@@ -73,7 +76,7 @@ public class HybridStackPlugin implements MethodCallHandler {
         result.success(true);
         break;
       case "startInitRoute":
-        showFlutterPage(initPageId, initArgs);
+        showFlutterPage(initPageId, initArgs, initResult);
         break;
       case "popFlutterActivity":
         HSRouter.sharedInstance().popFlutterActivity();
