@@ -6,29 +6,34 @@ import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
 import 'package:hybrid_stack_plugin/router.dart';
 import 'package:hybrid_stack_plugin_example/Demo2.dart';
 
-void main() => runApp(MyHome());
+void main() {
+  GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
+  HSRouter.init(key: navKey);
+  HSRouter.instance.addRoute('demo', (BuildContext context) {
+    pageId++;
+    return MyApp(pageId: pageId,);
+  });
+  HSRouter.instance.addRoute('demo2', (BuildContext context) {
+    pageId++;
+    return Demo2(pageId: pageId,);
+  });
+  runApp(MaterialApp(
+    navigatorKey: navKey,
+    home: EmptyPage(),
+  ));
+  HSRouter.instance.startRoute();
+}
 
 int pageId = 0;
 
-class MyHome extends StatelessWidget {
+
+class EmptyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
-    HSRouter.init(key: navKey);
-    HSRouter.instance.addRoute('demo', (BuildContext context) {
-      pageId++;
-      return MyApp(pageId: pageId,);
-    });
-    HSRouter.instance.addRoute('demo2', (BuildContext context) {
-      pageId++;
-      return Demo2(pageId: pageId,);
-    });
-    return MaterialApp(
-      navigatorKey: navKey,
-      home: MyApp(pageId: pageId,),
+    return Container(
+      color: Colors.white,
     );
   }
-
 }
 
 class MyApp extends StatefulWidget {
@@ -70,6 +75,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     int pid = widget.pageId;
+    print("main page: $pid");
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(

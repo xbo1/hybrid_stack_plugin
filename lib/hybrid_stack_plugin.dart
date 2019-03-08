@@ -25,14 +25,17 @@ class HybridStackPlugin {
   }
 
   pushNativePage(String pageId, Map args) async {
-    int result = await _channel.invokeMethod('pushNativePage', {
+    bool result = await _channel.invokeMethod('pushNativePage', {
       'pageId':pageId,
       'args':args
     });
     return result;
   }
-  popNativePage() {
-
+  popFlutterActivity() {
+    _channel.invokeMethod("popFlutterActivity");
+  }
+  void startInitRoute() {
+    _channel.invokeMethod("startInitRoute");
   }
 
   void _setupChannelHandler() {
@@ -55,9 +58,15 @@ class HybridStackPlugin {
         }
         case "popFlutterPage": {
           /// 重写 onBackPressed
-          return true; //能pop返回true,否则返回false
+          if (HSRouter.instance.canPop()) {
+            HSRouter.instance.doPop();
+            return true;
+          }
+          HSRouter.instance.doPop();
+          return false; //能pop返回true,否则返回false
         }
       }
     });
   }
+
 }

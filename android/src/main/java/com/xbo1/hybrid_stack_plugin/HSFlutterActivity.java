@@ -122,7 +122,8 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
         super.onCreate(savedInstanceState);
         boolean firstLaunch = nativeView == null;
         initDelegate();
-        HSRouter.sharedInstance().setAppContext(this);
+        HSRouter.sharedInstance().setAppContext(getApplicationContext());
+        HSRouter.sharedInstance().pushFlutterActivity(this);
         eventDelegate.onCreate(savedInstanceState);
 
         if (firstLaunch) {
@@ -197,6 +198,7 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
     @Override
     protected void onDestroy() {
         isActive = false;
+        HSRouter.sharedInstance().popFlutterActivity(this);
 //        eventDelegate.onDestroy();
         super.onDestroy();
     }

@@ -17,6 +17,7 @@ class _Demo2 extends State<Demo2> {
   @override
   Widget build(BuildContext context) {
     int pid = widget.pageId;
+    print("demo2 page: $pid");
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(

@@ -51,6 +51,8 @@ public class HybridStackPlugin implements MethodCallHandler {
   //flutter 内部路由
   void showFlutterPage(String pageId, HashMap<String, Object> args) {
     if (channel != null) {
+      initArgs = args;
+      initPageId = pageId;
       HashMap<String, Object> channelArgs = new HashMap<>();
       channelArgs.put("args", args);
 //      channelArgs.put("pageName", pageName);
@@ -58,6 +60,8 @@ public class HybridStackPlugin implements MethodCallHandler {
       channel.invokeMethod("pushFlutterPage", channelArgs, null);
     }
   }
+  private HashMap<String, Object> initArgs = new HashMap<>();
+  private String initPageId = "";
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     String method = call.method;
@@ -66,7 +70,14 @@ public class HybridStackPlugin implements MethodCallHandler {
         String pageId = call.argument("pageId");
         HashMap<String, Object> args = call.arguments();
         HSRouter.sharedInstance().openNativePage(pageId, args);
-        result.success(0);
+        result.success(true);
+        break;
+      case "startInitRoute":
+        showFlutterPage(initPageId, initArgs);
+        break;
+      case "popFlutterActivity":
+        HSRouter.sharedInstance().popFlutterActivity();
+        result.success(true);
         break;
       case "getPlatformVersion":
         result.success("Android " + android.os.Build.VERSION.RELEASE);
