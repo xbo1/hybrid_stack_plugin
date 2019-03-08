@@ -75,6 +75,12 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: Text('flutter page id=$pid'),
+          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
+            Map args = Map();
+            args['age'] = 12;
+            args['name'] = 'bob';
+            Navigator.of(context).pop(args);
+          },),
         ),
         body: Center(
           child: ListView(

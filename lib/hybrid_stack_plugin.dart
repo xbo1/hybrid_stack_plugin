@@ -31,8 +31,8 @@ class HybridStackPlugin {
     });
     return result;
   }
-  popFlutterActivity() {
-    _channel.invokeMethod("popFlutterActivity");
+  popFlutterActivity(Map args) {
+    _channel.invokeMethod("popFlutterActivity", args);
   }
   void startInitRoute() {
     _channel.invokeMethod("startInitRoute");

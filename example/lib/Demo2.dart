@@ -22,6 +22,9 @@ class _Demo2 extends State<Demo2> {
       home: Scaffold(
         appBar: AppBar(
           title: Text('flutter page id=$pid'),
+          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
+            Navigator.of(context).pop("I am message from flutter example");
+          },),
         ),
         body: Center(
             child: ListView(

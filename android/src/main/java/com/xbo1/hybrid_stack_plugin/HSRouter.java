@@ -57,8 +57,11 @@ public class HSRouter {
     public void popFlutterActivity() {
         mFlutterActivities.pop();
     }
-    void finishFlutterActivity() {
+    void finishFlutterActivity(HashMap<String, Object> args) {
         Activity activity = mFlutterActivities.peek();
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_KEY, args);
+        activity.setResult(NATIVE_REQUEST, intent);
         activity.finish();
     }
 }

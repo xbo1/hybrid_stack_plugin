@@ -90,7 +90,11 @@ class HSRouter {
     _navigatorHistory.remove(route);
     if (_firstRoutes.containsKey(route)) {
       _firstRoutes.remove(route);
-      HybridStackPlugin.instance.popFlutterActivity();
+      //TODO add real data from route popped
+      Map args = Map();
+      args['age'] = 12;
+      args['name'] = 'bob';
+      HybridStackPlugin.instance.popFlutterActivity(args);
     }
   }
 

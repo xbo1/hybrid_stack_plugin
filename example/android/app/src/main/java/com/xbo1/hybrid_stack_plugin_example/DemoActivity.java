@@ -6,9 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.xbo1.hybrid_stack_plugin.HSRouter;
 import com.xbo1.hybrid_stack_plugin.HybridStackPlugin;
 
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 public class DemoActivity extends Activity {
@@ -48,5 +53,20 @@ public class DemoActivity extends Activity {
         intent.putExtra("args", result);
         setResult(124, intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == HSRouter.NATIVE_REQUEST) {
+            Serializable dataArgs = data.getSerializableExtra(HSRouter.EXTRA_KEY);
+            HashMap<String, Object> args = new HashMap<>();
+            if (dataArgs instanceof HashMap) {
+                args = (HashMap<String, Object>)dataArgs;
+            }
+            JSONObject json = new JSONObject(args);
+            Toast.makeText(this, json.toString(), Toast.LENGTH_LONG).show();
+        }
+
     }
 }

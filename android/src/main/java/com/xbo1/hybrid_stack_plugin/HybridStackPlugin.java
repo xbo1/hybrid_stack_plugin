@@ -68,17 +68,17 @@ public class HybridStackPlugin implements MethodCallHandler {
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     String method = call.method;
+    HashMap<String, Object> args = call.arguments();
     switch (method) {
       case "pushNativePage":
         String pageId = call.argument("pageId");
-        HashMap<String, Object> args = call.arguments();
         HSRouter.sharedInstance().openNativePage(pageId, args, result);
         break;
       case "startInitRoute":
         showFlutterPage(initPageId, initArgs, initResult);
         break;
       case "popFlutterActivity":
-        HSRouter.sharedInstance().finishFlutterActivity();
+        HSRouter.sharedInstance().finishFlutterActivity(args);
         result.success(true);
         break;
       case "getPlatformVersion":
