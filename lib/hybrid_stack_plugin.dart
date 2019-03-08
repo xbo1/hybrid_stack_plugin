@@ -46,6 +46,10 @@ class HybridStackPlugin {
         case "pushFlutterPage": {
           Map args = call.arguments;
           var ret = await HSRouter.instance.push(pageId: args['pageId'], args:args['args']);
+          print("push result: $ret");
+          HybridStackPlugin.instance.popFlutterActivity({
+            'data':ret
+          });
           return ret;
         }
         case "requestUpdateTheme": {
