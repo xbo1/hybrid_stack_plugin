@@ -72,14 +72,13 @@ public class HybridStackPlugin implements MethodCallHandler {
       case "pushNativePage":
         String pageId = call.argument("pageId");
         HashMap<String, Object> args = call.arguments();
-        HSRouter.sharedInstance().openNativePage(pageId, args);
-        result.success(true);
+        HSRouter.sharedInstance().openNativePage(pageId, args, result);
         break;
       case "startInitRoute":
         showFlutterPage(initPageId, initArgs, initResult);
         break;
       case "popFlutterActivity":
-        HSRouter.sharedInstance().popFlutterActivity();
+        HSRouter.sharedInstance().finishFlutterActivity();
         result.success(true);
         break;
       case "getPlatformVersion":

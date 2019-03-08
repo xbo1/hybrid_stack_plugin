@@ -37,4 +37,16 @@ public class DemoActivity extends Activity {
             startActivity(intent);
         });
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent intent = new Intent();
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("key", "demo");
+        result.put("age", 13);
+        intent.putExtra("args", result);
+        setResult(124, intent);
+        finish();
+    }
 }

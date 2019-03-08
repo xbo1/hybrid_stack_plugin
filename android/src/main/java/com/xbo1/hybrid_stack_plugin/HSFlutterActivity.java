@@ -47,7 +47,7 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
     private FlutterActivityEvents eventDelegate;
     private PluginRegistry pluginRegistry;
 
-
+    MethodChannel.Result channelResult;
     protected ViewGroup rootView;
     private boolean isActive;
     void initDelegate() {
@@ -197,7 +197,7 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
     @Override
     protected void onDestroy() {
         isActive = false;
-        HSRouter.sharedInstance().popFlutterActivity(this);
+        HSRouter.sharedInstance().popFlutterActivity();
 //        eventDelegate.onDestroy();
         super.onDestroy();
     }
@@ -260,12 +260,19 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (isFlutterViewAttachedOnMe() && !eventDelegate.onActivityResult(requestCode, resultCode, data)) {
+        //isFlutterViewAttachedOnMe() && 不能加，会导致数据无法返回
+        if (!eventDelegate.onActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
             //从Native返回的
             if (requestCode == HSRouter.FLUTTER_REQUEST && data != null) {
-                // data.getSerializableExtra("args");
-
+                Serializable dataArgs = data.getSerializableExtra(HSRouter.EXTRA_KEY);
+                HashMap<String, Object> args = new HashMap<>();
+                if (dataArgs instanceof HashMap) {
+                    args = (HashMap<String, Object>)dataArgs;
+                }
+                if (channelResult != null) {
+                    channelResult.success(args);
+                }
             }
         }
     }

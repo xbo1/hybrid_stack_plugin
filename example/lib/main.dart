@@ -93,8 +93,9 @@ class _MyAppState extends State<MyApp> {
               ),
               ListTile(
                 title: Text('Open Native Page'),
-                onTap: () {
-                  HybridStackPlugin.instance.pushNativePage("demo", {});
+                onTap: () async {
+                  var result = await HybridStackPlugin.instance.pushNativePage("demo", {});
+                  print("main native result： $result");
                 },
               )
             ],

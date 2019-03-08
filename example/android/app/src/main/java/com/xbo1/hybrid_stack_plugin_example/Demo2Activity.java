@@ -37,4 +37,13 @@ public class Demo2Activity extends Activity {
             startActivity(intent);
         });
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("args", "我是返回值");
+        setResult(124, intent);
+        finish();
+    }
 }

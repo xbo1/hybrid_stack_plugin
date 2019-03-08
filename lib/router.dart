@@ -86,7 +86,7 @@ class HSRouter {
     state.widget.observers.add(_naviObserver);
   }
 
-  void prePoped(Route route) {
+  void prePopped(Route route) {
     _navigatorHistory.remove(route);
     if (_firstRoutes.containsKey(route)) {
       _firstRoutes.remove(route);
@@ -106,7 +106,7 @@ class _NavigationObserver extends NavigatorObserver {
 
   @override
   void didPop(Route route, Route previousRoute) {
-    HSRouter.instance.prePoped(route);
+    HSRouter.instance.prePopped(route);
     super.didPop(route, previousRoute);
   }
 

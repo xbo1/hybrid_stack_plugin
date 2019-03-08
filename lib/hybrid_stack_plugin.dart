@@ -25,7 +25,7 @@ class HybridStackPlugin {
   }
 
   pushNativePage(String pageId, Map args) async {
-    bool result = await _channel.invokeMethod('pushNativePage', {
+    var result = await _channel.invokeMethod('pushNativePage', {
       'pageId':pageId,
       'args':args
     });

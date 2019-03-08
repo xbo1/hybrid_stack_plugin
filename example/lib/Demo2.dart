@@ -40,8 +40,9 @@ class _Demo2 extends State<Demo2> {
                 ),
                 ListTile(
                   title: Text('Open Native Page'),
-                  onTap: () {
-                    HybridStackPlugin.instance.pushNativePage("demo2", {});
+                  onTap: () async {
+                    var result = await HybridStackPlugin.instance.pushNativePage("demo2", {});
+                    print("demo2 native result： $result");
                   },
                 )
               ],
