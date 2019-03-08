@@ -45,7 +45,7 @@ class HybridStackPlugin {
       switch (methodName) {
         case "pushFlutterPage": {
           Map args = call.arguments;
-          HSRouter.instance.push(pageId: args['pageId']);
+          HSRouter.instance.push(pageId: args['pageId'], args:args['args']);
           break;
         }
         case "requestUpdateTheme": {

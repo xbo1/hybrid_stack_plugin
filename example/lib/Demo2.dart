@@ -33,8 +33,8 @@ class _Demo2 extends State<Demo2> {
                   title: Text('Open Flutter Page'),
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      pageId++;
-                      return MyApp(pageId: pageId,);
+                      pid++;
+                      return MyApp(pageId: pid,);
                     }));
                   },
                 ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
 
 
-typedef PageWidgetBuilder = Widget Function(BuildContext context, Map args);
+typedef HSWidgetBuilder = Widget Function(BuildContext context, Map args);
 
 class HSRouter {
   /// 初始化逻辑
@@ -24,26 +24,28 @@ class HSRouter {
   }
   static HSRouter _singleton;
 
-  addRoute(String id, WidgetBuilder builder) {
+  addRoute(String id, HSWidgetBuilder builder) {
     _routes[id] = builder;
   }
 
   startRoute() {
     HybridStackPlugin.instance.startInitRoute();
   }
-  Map<String, WidgetBuilder> _routes = Map();
+  Map<String, HSWidgetBuilder> _routes = Map();
   /// flutter 页面的导航器 NavigatorState
   GlobalKey<NavigatorState> _navigatorStateKey;
 
-  Future<dynamic> push({String pageId}) async {
+  Future<dynamic> push({String pageId, Map args}) async {
     /// open the route
     print('push page: $pageId');
     registerPageObserver();
     var builder = _routes[pageId];
     if (builder == null) {
-      builder = (context)=>_RouteNotFoundPage();
+      builder = (context, args)=>_RouteNotFoundPage(pageId, _routes);
     }
-    var pageRoute = MaterialPageRoute(builder: builder);
+    var pageRoute = MaterialPageRoute(builder: (context) {
+      return builder(context, args);
+    });
     final navState = _navigatorStateKey?.currentState;
     navState.push(pageRoute);
     _firstRoutes[pageRoute] = pageId;
@@ -126,12 +128,29 @@ class _NavigationObserver extends NavigatorObserver {
 
 
 class _RouteNotFoundPage extends StatelessWidget {
+  final Map<String, HSWidgetBuilder> routes;
+  final String pageId;
+  _RouteNotFoundPage(this.pageId, this.routes);
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Center(
-        child: Text("页面丢失"),
+        child: Column(
+          children: <Widget>[
+            Text("$pageId 页面丢失", style: TextStyle(color: Colors.black, fontSize: 24),),
+            Text("当前可用页面有：", style: TextStyle(color: Colors.black, fontSize: 24),),
+            Flexible(child:
+              ListView.builder(
+                itemCount: routes.length,
+                itemBuilder: (context, index) {
+                  var route = routes.keys.toList()[index];
+                  return Text(route, style: TextStyle(color: Colors.black, fontSize: 20));
+                },
+              )
+            )
+          ],
+        )
       ),
     );
   }

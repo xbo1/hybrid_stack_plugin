@@ -9,13 +9,11 @@ import 'package:hybrid_stack_plugin_example/Demo2.dart';
 void main() {
   GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
   HSRouter.init(key: navKey);
-  HSRouter.instance.addRoute('demo', (BuildContext context) {
-    pageId++;
-    return MyApp(pageId: pageId,);
+  HSRouter.instance.addRoute('demo', (BuildContext context, Map args) {
+    return MyApp(pageId: args['id'],);
   });
-  HSRouter.instance.addRoute('demo2', (BuildContext context) {
-    pageId++;
-    return Demo2(pageId: pageId,);
+  HSRouter.instance.addRoute('demo2', (BuildContext context, Map args) {
+    return Demo2(pageId: args['id'],);
   });
   runApp(MaterialApp(
     navigatorKey: navKey,
@@ -23,9 +21,6 @@ void main() {
   ));
   HSRouter.instance.startRoute();
 }
-
-int pageId = 0;
-
 
 class EmptyPage extends StatelessWidget {
   @override
@@ -91,8 +86,8 @@ class _MyAppState extends State<MyApp> {
                 title: Text('Open Flutter Page'),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    pageId++;
-                    return MyApp(pageId: pageId,);
+                    pid = pid+1;
+                    return MyApp(pageId: pid,);
                   }));
                 },
               ),
