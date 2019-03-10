@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
 
 
-typedef HSWidgetBuilder = Widget Function(BuildContext context, Map args);
-
 class HSRouter {
   /// 初始化逻辑
   /// [key] 是获取 navigator state 用的
   static HSRouter init({@required GlobalKey<NavigatorState> key}) {
     _singleton = HSRouter._internal(key);
-    //初始化plugin
-    HybridStackPlugin.instance;
     return _singleton;
   }
   HSRouter._internal(GlobalKey<NavigatorState> key) {
@@ -18,7 +14,7 @@ class HSRouter {
   }
   static HSRouter get instance {
     if (_singleton == null) {
-      throw Exception('must call Router.init(key) first');
+      throw Exception('must call HSRouter.init(key) first');
     }
     return _singleton;
   }
@@ -28,9 +24,6 @@ class HSRouter {
     _routes[id] = builder;
   }
 
-  startRoute() {
-    HybridStackPlugin.instance.startInitRoute();
-  }
   Map<String, HSWidgetBuilder> _routes = Map();
   /// flutter 页面的导航器 NavigatorState
   GlobalKey<NavigatorState> _navigatorStateKey;

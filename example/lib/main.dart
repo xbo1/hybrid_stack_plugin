@@ -3,23 +3,22 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
-import 'package:hybrid_stack_plugin/router.dart';
 import 'package:hybrid_stack_plugin_example/Demo2.dart';
 
 void main() {
   GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
-  HSRouter.init(key: navKey);
-  HSRouter.instance.addRoute('demo', (BuildContext context, Map args) {
+  HybridStackPlugin.init(key: navKey);
+  HybridStackPlugin.instance.addRoute('demo', (BuildContext context, Map args) {
     return MyApp(pageId: args['id'],);
   });
-  HSRouter.instance.addRoute('demo2', (BuildContext context, Map args) {
+  HybridStackPlugin.instance.addRoute('demo2', (BuildContext context, Map args) {
     return Demo2(pageId: args['id'],);
   });
   runApp(MaterialApp(
     navigatorKey: navKey,
     home: EmptyPage(),
   ));
-  HSRouter.instance.startRoute();
+  HybridStackPlugin.instance.startInitRoute();
 }
 
 class EmptyPage extends StatelessWidget {

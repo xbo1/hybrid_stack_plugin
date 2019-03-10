@@ -30,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
         <activity android:name=".DemoActivity"></activity>
         <activity android:name=".Demo2Activity"></activity>
     </application>

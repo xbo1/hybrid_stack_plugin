@@ -1,27 +1,32 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_stack_plugin/router.dart';
 
+typedef HSWidgetBuilder = Widget Function(BuildContext context, Map args);
+
 class HybridStackPlugin {
   static HybridStackPlugin _singleton;
-  static HybridStackPlugin get instance {
+  static HybridStackPlugin init({@required GlobalKey<NavigatorState> key}) {
     if (_singleton == null) {
       _singleton = HybridStackPlugin._internal();
+    }
+    HSRouter.init(key:key);
+    return _singleton;
+  }
+  static HybridStackPlugin get instance {
+    if (_singleton == null) {
+      throw Exception('must call HybridStackPlugin.init(key) first');
     }
     return _singleton;
   }
 
+
+  MethodChannel _channel;
   HybridStackPlugin._internal() {
     this._channel = const MethodChannel('hybrid_stack_plugin');
     _setupChannelHandler();
-  }
-
-  MethodChannel _channel;
-
-  Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
   }
 
   pushNativePage(String pageId, Map args) async {
@@ -31,11 +36,16 @@ class HybridStackPlugin {
     });
     return result;
   }
-  popFlutterActivity(Map args) {
-    _channel.invokeMethod("popFlutterActivity", args);
+  addRoute(String id, HSWidgetBuilder builder) {
+    HSRouter.instance.addRoute(id, builder);
   }
-  void startInitRoute() {
+  //called after runApp, only useful for Android
+  startInitRoute() {
     _channel.invokeMethod("startInitRoute");
+  }
+
+  _popFlutterActivity(Map args) {
+    _channel.invokeMethod("popFlutterActivity", args);
   }
 
   void _setupChannelHandler() {
@@ -47,11 +57,12 @@ class HybridStackPlugin {
           Map args = call.arguments;
           var ret = await HSRouter.instance.push(pageId: args['pageId'], args:args['args']);
           print("push result: $ret");
-          HybridStackPlugin.instance.popFlutterActivity({
+          _popFlutterActivity({
             'data':ret
           });
           return ret;
         }
+        //not used
         case "requestUpdateTheme": {
           // 请求更新主题色到 native 端，这里使用了一个测试接口，以后要注意
 //          var preTheme = SystemChrome.latestStyle;
@@ -73,4 +84,8 @@ class HybridStackPlugin {
     });
   }
 
+  Future<String> get platformVersion async {
+    final String version = await _channel.invokeMethod('getPlatformVersion');
+    return version;
+  }
 }

@@ -12,9 +12,6 @@ import java.util.Stack;
 import io.flutter.plugin.common.MethodChannel;
 
 public class HSRouter {
-    //used for called by native
-    public static final int NATIVE_REQUEST = 8758;
-    public static final String EXTRA_KEY = "args";
 
     public static final int FLUTTER_REQUEST = 8759;
     private static HSRouter sRouterInst;
@@ -46,7 +43,7 @@ public class HSRouter {
         Intent intent = new Intent(activity, HSFlutterActivity.class);
         intent.putExtra("args", args);
         intent.putExtra("pageId", pageId);
-        activity.startActivityForResult(intent, NATIVE_REQUEST);
+        activity.startActivityForResult(intent, HybridStackPlugin.NATIVE_REQUEST);
     }
 
     private Stack<HSFlutterActivity> mFlutterActivities = new Stack<>();
@@ -60,8 +57,8 @@ public class HSRouter {
     void finishFlutterActivity(HashMap<String, Object> args) {
         Activity activity = mFlutterActivities.peek();
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_KEY, args);
-        activity.setResult(NATIVE_REQUEST, intent);
+        intent.putExtra(HybridStackPlugin.EXTRA_KEY, args);
+        activity.setResult(HybridStackPlugin.NATIVE_REQUEST, intent);
         activity.finish();
     }
 }

@@ -15,6 +15,11 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** HybridStackPlugin */
 public class HybridStackPlugin implements MethodCallHandler {
+  //used for called by native
+  public static final int NATIVE_REQUEST = 8758;
+  public static final String EXTRA_KEY = "args";
+
+
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     if (instance == null) {

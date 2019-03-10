@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xbo1.hybrid_stack_plugin.HSRouter;
 import com.xbo1.hybrid_stack_plugin.HybridStackPlugin;
 
 import org.json.JSONObject;
@@ -54,8 +53,8 @@ public class Demo2Activity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == HSRouter.NATIVE_REQUEST) {
-            Serializable dataArgs = data.getSerializableExtra(HSRouter.EXTRA_KEY);
+        if (requestCode == HybridStackPlugin.NATIVE_REQUEST) {
+            Serializable dataArgs = data.getSerializableExtra(HybridStackPlugin.EXTRA_KEY);
             HashMap<String, Object> args = new HashMap<>();
             if (dataArgs instanceof HashMap) {
                 args = (HashMap<String, Object>)dataArgs;
