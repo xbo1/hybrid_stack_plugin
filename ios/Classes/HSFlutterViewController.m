@@ -31,9 +31,9 @@
     self.navigationController.navigationBarHidden = TRUE;
     [super viewWillAppear:animated];
 }
-- (void)dealloc{
-    [[HSRouter sharedInstance] popFlutterViewController];
-}
+//- (void)dealloc{
+//    [[HSRouter sharedInstance] popFlutterViewController];
+//}
 
 - (void)openFlutter {
     if (self.args != nil) {
@@ -42,6 +42,10 @@
         [[HybridStackPlugin sharedInstance] showFlutterPage:pageId args:dict result:nil];
     }
 }
+
+//- (BOOL)shouldAutomaticallyForwardAppearanceMethods{
+//    return YES;
+//}
 /*
 #pragma mark - Navigation
 

@@ -265,7 +265,7 @@ public class HSFlutterActivity extends Activity implements FlutterView.Provider,
             super.onActivityResult(requestCode, resultCode, data);
             //从Native返回的
             if (requestCode == HSRouter.FLUTTER_REQUEST && data != null) {
-                Serializable dataArgs = data.getSerializableExtra(HSRouter.EXTRA_KEY);
+                Serializable dataArgs = data.getSerializableExtra(HybridStackPlugin.EXTRA_KEY);
                 HashMap<String, Object> args = new HashMap<>();
                 if (dataArgs instanceof HashMap) {
                     args = (HashMap<String, Object>)dataArgs;
