@@ -19,6 +19,7 @@
     self.window = window;
     
     [[HybridStackPlugin sharedInstance] addRoute:@"demo" clazz:DemoViewController.class];
+    [[HybridStackPlugin sharedInstance] addRoute:@"demo2" clazz:DemoViewController.class];
     return YES;
 }
 

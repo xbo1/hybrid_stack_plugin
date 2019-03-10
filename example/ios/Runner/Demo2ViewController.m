@@ -1,40 +1,32 @@
 //
-//  DemoViewController.m
+//  Demo2ViewController.m
 //  Runner
 //
 //  Created by bob on 2019/3/10.
 //  Copyright © 2019 The Chromium Authors. All rights reserved.
 //
 
-#import "DemoViewController.h"
 #import "Demo2ViewController.h"
+#import "DemoViewController.h"
 #import <HybridStackPlugin.h>
 
-static NSInteger sNativeVCIdx = 0;
-
-
-@interface DemoViewController ()
+static NSInteger sNativeVC2Idx = 0;
+@interface Demo2ViewController ()
 
 @end
 
-@implementation DemoViewController
+@implementation Demo2ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    sNativeVCIdx++;
-    NSString *title = [NSString stringWithFormat:@"Native demo page(%ld)",(long)sNativeVCIdx];
+    sNativeVC2Idx++;
+    NSString *title = [NSString stringWithFormat:@"Native demo2 page(%ld)",(long)sNativeVC2Idx];
     self.title = title;
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
-    
-    if (_args != nil) {
-//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"传入参数" message:[self convertToJsonData:_args] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [alert show];
-        NSLog(@"传入参数:%@",[self convertToJsonData:_args]);
-    }
 }
 
 - (void)loadView{
@@ -54,27 +46,12 @@ static NSInteger sNativeVCIdx = 0;
     [btn setCenter:CGPointMake(view.center.x, view.center.y+50)];
     [btn addTarget:self action:@selector(onJumpFlutterPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-    [btn setTitle:@"Click to Pop Native Page" forState:UIControlStateNormal];
-    [view addSubview:btn];
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btn setCenter:CGPointMake(view.center.x, view.center.y+150)];
-    [btn addTarget:self action:@selector(onPopNative) forControlEvents:UIControlEventTouchUpInside];
-    
     self.view = view;
 }
 
-- (void)onPopNative {
-    if (_channelResult != nil) {
-        NSMutableDictionary* args = [NSMutableDictionary dictionary];
-        [args setObject:@"asdsad" forKey:@"asdid"];
-        _channelResult(args);
-    }
-    [self.navigationController popViewControllerAnimated:YES];
-}
 
 - (void)onJumpNativePressed{
-    Demo2ViewController *vc = [[Demo2ViewController alloc] init];
+    DemoViewController *vc = [[DemoViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -82,8 +59,8 @@ static NSInteger sNativeVCIdx = 0;
     NSMutableDictionary* args = [NSMutableDictionary dictionary];
     [args setObject:@12 forKey:@"id"];
     [[HybridStackPlugin sharedInstance] pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
-//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"返回结果" message:[self convertToJsonData:dict] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [alert show];
+        //        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"返回结果" message:[self convertToJsonData:dict] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        //        [alert show];
         NSLog(@"返回结果:%@", [self convertToJsonData:dict]);
     }];
 }

@@ -64,12 +64,30 @@
     //push native ViewController
     UINavigationController *nav = (UINavigationController*)[UIApplication sharedApplication].delegate.window.rootViewController;
     id vc = [[clazz alloc] init];
-    if ([self hasArgsProperty:clazz]) {
-        [vc setObject:args forKey:@"args"];
-    }
+    [self setArgsProperty:clazz obj:vc value:args];
+    [self setChannelResultProperty:clazz obj:vc value:result];
+//    [vc setObject:result forKey:@"_channelResult"];
     [nav pushViewController:vc animated:YES];
 }
-- (BOOL)hasArgsProperty:(Class)clazz {
+- (BOOL)setChannelResultProperty:(Class)clazz obj:(id)obj value:(id)value {
+    BOOL hasArgs = NO;
+    unsigned int methodCount = 0;
+    Ivar * ivars = class_copyIvarList([clazz class], &methodCount);
+    for (unsigned int i = 0; i < methodCount; i ++) {
+        Ivar ivar = ivars[i];
+        const char * name = ivar_getName(ivar);
+//        const char * type = ivar_getTypeEncoding(ivar);
+        if (strcmp(name, "_channelResult") == 0) {
+            hasArgs = YES;
+            object_setIvar(obj, ivar, value);
+            break;
+        }
+    }
+    free(ivars);
+    return hasArgs;
+}
+
+- (BOOL)setArgsProperty:(Class)clazz obj:(id)obj value:(id)value {
     BOOL hasArgs = NO;
     unsigned int methodCount = 0;
     Ivar * ivars = class_copyIvarList([clazz class], &methodCount);
@@ -77,8 +95,9 @@
         Ivar ivar = ivars[i];
         const char * name = ivar_getName(ivar);
         const char * type = ivar_getTypeEncoding(ivar);
-        if (strcmp(name, "args") == 0 && strcmp(type, "NSDictionary") == 0) {
+        if (strcmp(name, "_args") == 0 && strcmp(type, "@\"NSDictionary\"") == 0) {
             hasArgs = YES;
+            object_setIvar(obj, ivar, value);
             break;
         }
     }
