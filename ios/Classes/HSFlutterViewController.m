@@ -29,6 +29,8 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBarHidden = TRUE;
+    //must call setViewController, or page will not updated
+    [[self engine] setViewController:self];
     [super viewWillAppear:animated];
 }
 //- (void)dealloc{
