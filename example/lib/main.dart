@@ -68,6 +68,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    //build每次刷新都会执行，而且push到新页面后，也会执行，不能在此做复杂操作，尽量都在initState中完成
     int pid = widget.pageId;
     print("main page: $pid");
     return MaterialApp(
@@ -90,8 +91,10 @@ class _MyAppState extends State<MyApp> {
               ListTile(
                 title: Text('Open Flutter Page'),
                 onTap: () {
+                  pid = pid+1;
+                  print("onTap $pid");
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    pid = pid+1;
+                    //pid = pid+1; 运算不能在这里，从Native返回时，iOS上会再执行(Android不会)
                     return MyApp(pageId: pid,);
                   }));
                 },

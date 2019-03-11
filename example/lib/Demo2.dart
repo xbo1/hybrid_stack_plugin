@@ -35,8 +35,8 @@ class _Demo2 extends State<Demo2> {
                 ListTile(
                   title: Text('Open Flutter Page'),
                   onTap: () {
+                    pid++;
                     Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      pid++;
                       return MyApp(pageId: pid,);
                     }));
                   },
