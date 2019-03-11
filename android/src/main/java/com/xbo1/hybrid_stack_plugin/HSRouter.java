@@ -1,10 +1,8 @@
 package com.xbo1.hybrid_stack_plugin;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;

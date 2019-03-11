@@ -1,11 +1,8 @@
 package com.xbo1.hybrid_stack_plugin;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
