@@ -1,3 +1,3 @@
-## 0.0.1
+## 0.0.1 - 2019-03-11
 
-* TODO: Describe initial release.
+* 初步支持混合栈开发

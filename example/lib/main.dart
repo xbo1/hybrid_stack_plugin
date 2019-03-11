@@ -3,21 +3,26 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
-import 'package:hybrid_stack_plugin_example/Demo2.dart';
+import 'Demo2.dart';
 
 void main() {
+  //初始化plugin，必须创建navKey，用于监听flutter页面路由跳转(push和pop)
   GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
   HybridStackPlugin.init(key: navKey);
+  //添加会被Native端调用的路由，id可以是任意字符串
   HybridStackPlugin.instance.addRoute('demo', (BuildContext context, Map args) {
     return MyApp(pageId: args['id'],);
   });
   HybridStackPlugin.instance.addRoute('demo2', (BuildContext context, Map args) {
     return Demo2(pageId: args['id'],);
   });
+  // 必须添加navigatorKey，使得前面初始化的plugin可以监听路由跳转
+  // 建议home是一个空白页
   runApp(MaterialApp(
     navigatorKey: navKey,
     home: EmptyPage(),
   ));
+  // 必须告诉plugin启动成功，并跳转Native指定的页面
   HybridStackPlugin.instance.startInitRoute();
 }
 
@@ -102,7 +107,9 @@ class _MyAppState extends State<MyApp> {
               ListTile(
                 title: Text('Open Native Page'),
                 onTap: () async {
-                  var result = await HybridStackPlugin.instance.pushNativePage("demo", {});
+                  //跳到Native页面，pageId是在Native端注册好的路由，args是要传到Native端的参数
+                  var result = await HybridStackPlugin.instance.pushNativePage("demo", {'key':'hybrid_stack','age':9});
+                  //使用async/await可以得到Native页面返回时的结果
                   print("main native result： $result");
                 },
               )

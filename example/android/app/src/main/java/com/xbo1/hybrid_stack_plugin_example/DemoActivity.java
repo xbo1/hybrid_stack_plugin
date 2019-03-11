@@ -26,6 +26,13 @@ public class DemoActivity extends Activity {
             int id = data.getIntExtra("pageId", 0);
             TextView tvInfo = findViewById(R.id.tv_info);
             tvInfo.setText("原生页面:"+id);
+            Serializable initArgs = data.getSerializableExtra("args");
+            if (initArgs instanceof HashMap) {
+                HashMap<String, Object> args = (HashMap<String, Object>)initArgs;
+                JSONObject json = new JSONObject(args);
+                //包含了pageId和args为key的数据
+                Toast.makeText(this, "初始化参数:"+json.toString(), Toast.LENGTH_LONG).show();
+            }
         }
         Button btn1 = findViewById(R.id.btn_jump_to_flutter);
         btn1.setOnClickListener((View view)-> {
@@ -50,7 +57,7 @@ public class DemoActivity extends Activity {
         result.put("key", "demo");
         result.put("age", 13);
         intent.putExtra("args", result);
-        setResult(124, intent);
+        setResult(918, intent);
         finish();
     }
 
@@ -59,12 +66,11 @@ public class DemoActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == HybridStackPlugin.NATIVE_REQUEST) {
             Serializable dataArgs = data.getSerializableExtra(HybridStackPlugin.EXTRA_KEY);
-            HashMap<String, Object> args = new HashMap<>();
             if (dataArgs instanceof HashMap) {
-                args = (HashMap<String, Object>)dataArgs;
+                HashMap<String, Object> args = (HashMap<String, Object>)dataArgs;
+                JSONObject json = new JSONObject(args);
+                Toast.makeText(this, json.toString(), Toast.LENGTH_LONG).show();
             }
-            JSONObject json = new JSONObject(args);
-            Toast.makeText(this, json.toString(), Toast.LENGTH_LONG).show();
         }
 
     }

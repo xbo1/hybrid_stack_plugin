@@ -31,8 +31,6 @@ static NSInteger sNativeVCIdx = 0;
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     
     if (_args != nil) {
-//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"传入参数" message:[self convertToJsonData:_args] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [alert show];
         NSLog(@"传入参数:%@",[self convertToJsonData:_args]);
     }
 }
@@ -67,7 +65,7 @@ static NSInteger sNativeVCIdx = 0;
 - (void)onPopNative {
     if (_channelResult != nil) {
         NSMutableDictionary* args = [NSMutableDictionary dictionary];
-        [args setObject:@"asdsad" forKey:@"asdid"];
+        [args setObject:@"我是结果" forKey:@"result"];
         _channelResult(args);
     }
     [self.navigationController popViewControllerAnimated:YES];
@@ -82,8 +80,6 @@ static NSInteger sNativeVCIdx = 0;
     NSMutableDictionary* args = [NSMutableDictionary dictionary];
     [args setObject:@12 forKey:@"id"];
     [[HybridStackPlugin sharedInstance] pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
-//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"返回结果" message:[self convertToJsonData:dict] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [alert show];
         NSLog(@"返回结果:%@", [self convertToJsonData:dict]);
     }];
 }

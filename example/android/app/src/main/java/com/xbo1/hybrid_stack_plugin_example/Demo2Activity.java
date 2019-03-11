@@ -26,6 +26,14 @@ public class Demo2Activity extends Activity {
             int id = data.getIntExtra("pageId", 0);
             TextView tvInfo = findViewById(R.id.tv_info);
             tvInfo.setText("原生页面2:"+id);
+            Serializable initArgs = data.getSerializableExtra("args");
+            if (initArgs instanceof HashMap) {
+                HashMap<String, Object> args = (HashMap<String, Object>)initArgs;
+                JSONObject json = new JSONObject(args);
+                //包含了pageId和args为key的数据
+                Toast.makeText(this, "初始化参数:"+json.toString(), Toast.LENGTH_LONG).show();
+            }
+
         }
         Button btn1 = findViewById(R.id.btn_jump_to_flutter);
         btn1.setOnClickListener((View view)-> {
@@ -47,7 +55,7 @@ public class Demo2Activity extends Activity {
 //        super.onBackPressed();
         Intent intent = new Intent();
         intent.putExtra("args", "我是返回值");
-        setResult(124, intent);
+        setResult(918, intent);
         finish();
     }
     @Override

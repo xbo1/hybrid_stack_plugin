@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
-import 'package:hybrid_stack_plugin_example/main.dart';
-
+import 'main.dart';
 
 class Demo2 extends StatefulWidget {
   final int pageId;
@@ -44,7 +43,7 @@ class _Demo2 extends State<Demo2> {
                 ListTile(
                   title: Text('Open Native Page'),
                   onTap: () async {
-                    var result = await HybridStackPlugin.instance.pushNativePage("demo2", {});
+                    var result = await HybridStackPlugin.instance.pushNativePage("demo2", {'args':123});
                     print("demo2 native result： $result");
                   },
                 )
