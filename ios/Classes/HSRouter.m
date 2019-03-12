@@ -49,11 +49,17 @@
     [dict setValue:pageId forKey:@"pageId"];
     [dict setValue:args forKey:@"args"];
     HSFlutterViewController *vc = [[HSFlutterViewController alloc] initWithEngineAndArgs:_flutterEngine args:dict];
-    UINavigationController *nav = (UINavigationController*)[UIApplication sharedApplication].delegate.window.rootViewController;
+    
+    UIViewController *curVC = [self topViewController];
     if (block != nil) {
         vc.resultBlock = block;
     }
-    [nav pushViewController:vc animated:YES];
+    if (curVC.navigationController != nil) {
+        [curVC.navigationController pushViewController:vc animated:YES];
+    }
+    else {
+        [curVC presentViewController:vc animated:YES completion:nil];
+    }
 }
 
 - (void)openNativePage:(NSString *)pageId args:(NSDictionary *)args result:(FlutterResult)result {
@@ -62,12 +68,18 @@
         return;
     }
     //push native ViewController
-    UINavigationController *nav = (UINavigationController*)[UIApplication sharedApplication].delegate.window.rootViewController;
+    UIViewController *curVC = [self topViewController];
+    
     id vc = [[clazz alloc] init];
     [self setArgsProperty:clazz obj:vc value:args];
     [self setChannelResultProperty:clazz obj:vc value:result];
 //    [vc setObject:result forKey:@"_channelResult"];
-    [nav pushViewController:vc animated:YES];
+    if (curVC.navigationController != nil) {
+        [curVC.navigationController pushViewController:vc animated:YES];
+    }
+    else {
+        [curVC presentViewController:vc animated:YES completion:nil];
+    }
 }
 - (BOOL)setChannelResultProperty:(Class)clazz obj:(id)obj value:(id)value {
     BOOL hasArgs = NO;
@@ -105,15 +117,37 @@
     return hasArgs;
 }
 
+- (UIViewController *)topViewController {
+    UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController;
+    while (vc.presentedViewController) {
+        vc = [self _topViewController:vc.presentedViewController];
+    }
+    return vc;
+}
+
+- (UIViewController *)_topViewController:(UIViewController *)vc {
+    if ([vc isKindOfClass:[UINavigationController class]]) {
+        return [self _topViewController:[(UINavigationController *)vc topViewController]];
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        return [self _topViewController:[(UITabBarController *)vc selectedViewController]];
+    }
+    return vc;
+}
+
 - (void)finishFlutterViewController:(NSDictionary *)args {
     //NSLog(@"called finish flutter view controller by dart");
-    UINavigationController *nav = (UINavigationController*)[UIApplication sharedApplication].delegate.window.rootViewController;
-    if(nav.viewControllers.count>1 && [nav.topViewController isKindOfClass:[HSFlutterViewController class]]){
-        HSFlutterViewController *vc = (HSFlutterViewController *)nav.topViewController;
+    UIViewController *curVC = [self topViewController];
+    if([curVC isKindOfClass:[HSFlutterViewController class]]){
+        HSFlutterViewController *vc = (HSFlutterViewController *)curVC;
         if (vc.resultBlock != nil) {
             vc.resultBlock(args);
         }
-        [nav popViewControllerAnimated:YES];
+        if (curVC.navigationController != nil) {
+            [curVC.navigationController popViewControllerAnimated:YES];
+        }
+        else {
+            [curVC dismissViewControllerAnimated:YES completion:nil];
+        }
     }
 }
 

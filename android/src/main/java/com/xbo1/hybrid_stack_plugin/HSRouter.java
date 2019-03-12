@@ -29,6 +29,9 @@ public class HSRouter {
         if (!routes.containsKey(pageId)) {
             return;
         }
+        if (mFlutterActivities.empty()) {
+            return;
+        }
         HSFlutterActivity activity = mFlutterActivities.peek();
         activity.channelResult = result;
         Intent intent = new Intent(activity,routes.get(pageId));
@@ -53,6 +56,9 @@ public class HSRouter {
         mFlutterActivities.pop();
     }
     void finishFlutterActivity(HashMap<String, Object> args) {
+        if (mFlutterActivities.empty()) {
+            return;
+        }
         Activity activity = mFlutterActivities.peek();
         Intent intent = new Intent();
         intent.putExtra(HybridStackPlugin.EXTRA_KEY, args);

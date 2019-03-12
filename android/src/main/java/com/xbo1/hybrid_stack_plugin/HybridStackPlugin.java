@@ -53,16 +53,20 @@ public class HybridStackPlugin implements MethodCallHandler {
 
   //flutter 内部路由
   void showFlutterPage(String pageId, HashMap<String, Object> args, Result result) {
-    if (channel != null) {
-      initArgs = args;
-      initPageId = pageId;
-      initResult = result;
-      HashMap<String, Object> channelArgs = new HashMap<>();
-      channelArgs.put("args", args);
-//      channelArgs.put("pageName", pageName);
-      channelArgs.put("pageId", pageId);
-      channel.invokeMethod("pushFlutterPage", channelArgs, result);
+    if (channel == null) {
+      return;
     }
+    if (pageId==null || pageId.isEmpty()) {
+      return;
+    }
+    initArgs = args;
+    initPageId = pageId;
+    initResult = result;
+    HashMap<String, Object> channelArgs = new HashMap<>();
+    channelArgs.put("args", args);
+//      channelArgs.put("pageName", pageName);
+    channelArgs.put("pageId", pageId);
+    channel.invokeMethod("pushFlutterPage", channelArgs, result);
   }
   private HashMap<String, Object> initArgs = new HashMap<>();
   private String initPageId = "";
