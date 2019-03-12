@@ -16,7 +16,6 @@ public class HybridStackPlugin implements MethodCallHandler {
   public static final int NATIVE_REQUEST = 8758;
   public static final String EXTRA_KEY = "args";
 
-
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     if (instance == null) {
@@ -29,19 +28,20 @@ public class HybridStackPlugin implements MethodCallHandler {
 
   }
   private static HybridStackPlugin instance;
-  public static synchronized HybridStackPlugin getInstance() {
+  static synchronized HybridStackPlugin getInstance() {
     if (instance == null) {
       instance = new HybridStackPlugin();
     }
     return instance;
   }
-  private MethodChannel channel;
-  public void addRoute(String pageId, Class clazz) {
+  public static void addRoute(String pageId, Class clazz) {
     HSRouter.sharedInstance().addRoute(pageId, clazz);
   }
-  public void pushFlutterPage(Activity activity, String pageId, HashMap<String, Object> args) {
+  public static void pushFlutterPage(Activity activity, String pageId, HashMap<String, Object> args) {
     HSRouter.sharedInstance().openFlutterPage(activity, pageId, args);
   }
+
+  private MethodChannel channel;
   void popFlutterPage(Result result) {
     if (channel != null) {
       channel.invokeMethod("popFlutterPage", null, result);
@@ -50,7 +50,6 @@ public class HybridStackPlugin implements MethodCallHandler {
       result.error("-1", "channel is null", null);
     }
   }
-
   //flutter 内部路由
   void showFlutterPage(String pageId, HashMap<String, Object> args, Result result) {
     if (channel == null) {

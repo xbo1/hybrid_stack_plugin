@@ -11,7 +11,7 @@ flutter版本要求: 1.2
 
 在pubspec.yaml添加依赖
 
-    hybrid_stack_plugin: ^0.0.2
+    hybrid_stack_plugin: ^0.0.3
 在执行"flutter packages get"后，您可以查看包中的example，了解如何使用它。
 
 ### flutter
@@ -22,10 +22,10 @@ void main() {
   GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
   HybridStackPlugin.init(key: navKey);
   //添加会被Native端调用的路由，id可以是任意字符串
-  HybridStackPlugin.instance.addRoute('demo', (BuildContext context, Map args) {
+  HybridStackPlugin.addRoute('demo', (BuildContext context, Map args) {
     return MyApp(pageId: args['id'],);
   });
-  HybridStackPlugin.instance.addRoute('demo2', (BuildContext context, Map args) {
+  HybridStackPlugin.addRoute('demo2', (BuildContext context, Map args) {
     return Demo2(pageId: args['id'],);
   });
   // 必须添加navigatorKey，使得前面初始化的plugin可以监听路由跳转
@@ -35,14 +35,14 @@ void main() {
     home: EmptyPage(),
   ));
   // 必须告诉plugin启动成功，并跳转Native指定的页面
-  HybridStackPlugin.instance.startInitRoute();
+  HybridStackPlugin.startInitRoute();
 }
 ```
 跳转到Native页面
 ```
 onTap: () async {
   //跳到Native页面，pageId是在Native端注册好的路由，args是要传到Native端的参数
-  var result = await HybridStackPlugin.instance.pushNativePage("demo", {'key':'hybrid_stack','age':9});
+  var result = await HybridStackPlugin.pushNativePage("demo", {'key':'hybrid_stack','age':9});
   //使用async/await可以得到Native页面返回时的结果
   print("main native result： $result");
 },
@@ -58,14 +58,14 @@ Flutter内部的页面跳转，依旧使用Navigator.push/pop
   //初始化Flutter
   FlutterMain.startInitialization(this);
   //注册路由到plugin
-  HybridStackPlugin.getInstance().addRoute("demo", DemoActivity.class);
-  HybridStackPlugin.getInstance().addRoute("demo2", Demo2Activity.class);
+  HybridStackPlugin.addRoute("demo", DemoActivity.class);
+  HybridStackPlugin.addRoute("demo2", Demo2Activity.class);
 ```
 跳转到Flutter页面
 ```
   HashMap<String, Object> args = new HashMap<>();
   args.put("id", pageId);
-  HybridStackPlugin.getInstance().pushFlutterPage(DemoActivity.this, "demo", args);
+  HybridStackPlugin.pushFlutterPage(DemoActivity.this, "demo", args);
 ```
 接收Flutter启动Native页面是传过来的参数，在onCreate中添加
 ```
@@ -111,14 +111,14 @@ public void onBackPressed() {
 
 初始化，在application初始化时，注册页面路由
 ```
-  //如果不添加addRoute，也要执行[HybridStackPlugin sharedInstance]初始化FlutterEngine
-  [[HybridStackPlugin sharedInstance] addRoute:@"demo" clazz:DemoViewController.class];
+  //必须至少调用一次addRoute，它会初始化FlutterEngine
+  [HybridStackPlugin addRoute:@"demo" clazz:DemoViewController.class];
 ```
 跳转到Flutter页面
 ```
   NSMutableDictionary* args = [NSMutableDictionary dictionary];
   [args setObject:@12 forKey:@"id"];
-  [[HybridStackPlugin sharedInstance] pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
+  [HybridStackPlugin pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
     NSLog(@"返回结果:%@", [self convertToJsonData:dict]);
   }];
 ```

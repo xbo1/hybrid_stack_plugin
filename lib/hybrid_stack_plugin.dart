@@ -7,7 +7,6 @@ import 'package:hybrid_stack_plugin/router.dart';
 typedef HSWidgetBuilder = Widget Function(BuildContext context, Map args);
 
 class HybridStackPlugin {
-  static HybridStackPlugin _singleton;
   static HybridStackPlugin init({@required GlobalKey<NavigatorState> key}) {
     if (_singleton == null) {
       _singleton = HybridStackPlugin._internal();
@@ -15,6 +14,23 @@ class HybridStackPlugin {
     HSRouter.init(key:key);
     return _singleton;
   }
+  static pushNativePage(String pageId, Map args) async {
+    var result = await instance._channel.invokeMethod('pushNativePage', {
+      'pageId':pageId,
+      'args':args
+    });
+    return result;
+  }
+  static addRoute(String id, HSWidgetBuilder builder) {
+    HSRouter.instance.addRoute(id, builder);
+  }
+  //called after runApp, only useful for Android
+  static startInitRoute() {
+    instance._channel.invokeMethod("startInitRoute");
+  }
+
+
+  static HybridStackPlugin _singleton;
   static HybridStackPlugin get instance {
     if (_singleton == null) {
       throw Exception('must call HybridStackPlugin.init(key) first');
@@ -22,26 +38,10 @@ class HybridStackPlugin {
     return _singleton;
   }
 
-
   MethodChannel _channel;
   HybridStackPlugin._internal() {
     this._channel = const MethodChannel('hybrid_stack_plugin');
     _setupChannelHandler();
-  }
-
-  pushNativePage(String pageId, Map args) async {
-    var result = await _channel.invokeMethod('pushNativePage', {
-      'pageId':pageId,
-      'args':args
-    });
-    return result;
-  }
-  addRoute(String id, HSWidgetBuilder builder) {
-    HSRouter.instance.addRoute(id, builder);
-  }
-  //called after runApp, only useful for Android
-  startInitRoute() {
-    _channel.invokeMethod("startInitRoute");
   }
 
   _popFlutterActivity(Map args) {

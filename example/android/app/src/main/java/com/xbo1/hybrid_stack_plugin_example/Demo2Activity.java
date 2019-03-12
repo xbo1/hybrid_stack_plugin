@@ -39,7 +39,7 @@ public class Demo2Activity extends Activity {
         btn1.setOnClickListener((View view)-> {
             HashMap<String, Object> args = new HashMap<>();
             args.put("id", pageId);
-            HybridStackPlugin.getInstance().pushFlutterPage(Demo2Activity.this,"demo2", args);
+            HybridStackPlugin.pushFlutterPage(Demo2Activity.this,"demo2", args);
         });
         Button btn2 = findViewById(R.id.btn_jump_to_native);
         btn2.setOnClickListener((View view)-> {

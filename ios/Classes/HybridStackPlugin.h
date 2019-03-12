@@ -6,10 +6,9 @@ typedef void(^HSPageResult)(NSDictionary * result);
 + (instancetype)sharedInstance;
 + (instancetype)new NS_UNAVAILABLE;
 
++ (void)addRoute:(NSString *)pageId clazz:(Class)clazz;
 
-- (void)addRoute:(NSString *)pageId clazz:(Class)clazz;
-
-- (void)pushFlutterPage:(NSString *)pageId args:(NSDictionary *)args block:(HSPageResult)block;
++ (void)pushFlutterPage:(NSString *)pageId args:(NSDictionary *)args block:(HSPageResult)block;
 
 //内部使用
 - (void)showFlutterPage:(NSString *)pageId args:(NSDictionary *)args result:(FlutterResult)result;

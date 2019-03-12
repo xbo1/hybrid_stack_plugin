@@ -1,6 +1,6 @@
 name: hybrid_stack_plugin
 description: A Flutter plugin for page manage between push&#x2F;pop native and flutter
-version: 0.0.2
+version: 0.0.3
 author: xbo1<wangshyn@gmail.com>
 homepage: https://github.com/xbo1/hybrid_stack_plugin
 

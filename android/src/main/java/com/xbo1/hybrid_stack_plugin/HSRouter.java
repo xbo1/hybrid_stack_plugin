@@ -9,11 +9,11 @@ import java.util.Stack;
 
 import io.flutter.plugin.common.MethodChannel;
 
-public class HSRouter {
-
-    public static final int FLUTTER_REQUEST = 8759;
+class HSRouter {
+    static final int FLUTTER_REQUEST = 8759;
     private static HSRouter sRouterInst;
-    public static HSRouter sharedInstance(){
+    private HSRouter(){}
+    static HSRouter sharedInstance(){
         if(sRouterInst==null){
             sRouterInst = new HSRouter();
         }
@@ -49,10 +49,10 @@ public class HSRouter {
 
     private Stack<HSFlutterActivity> mFlutterActivities = new Stack<>();
 
-    public void pushFlutterActivity(HSFlutterActivity activity) {
+    void pushFlutterActivity(HSFlutterActivity activity) {
         mFlutterActivities.push(activity);
     }
-    public void popFlutterActivity() {
+    void popFlutterActivity() {
         mFlutterActivities.pop();
     }
     void finishFlutterActivity(HashMap<String, Object> args) {

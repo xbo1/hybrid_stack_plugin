@@ -119,6 +119,7 @@
 
 - (UIViewController *)topViewController {
     UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController;
+    vc = [self _topViewController:vc];
     while (vc.presentedViewController) {
         vc = [self _topViewController:vc.presentedViewController];
     }

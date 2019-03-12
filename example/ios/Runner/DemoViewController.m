@@ -79,7 +79,7 @@ static NSInteger sNativeVCIdx = 0;
 - (void)onJumpFlutterPressed{
     NSMutableDictionary* args = [NSMutableDictionary dictionary];
     [args setObject:@12 forKey:@"id"];
-    [[HybridStackPlugin sharedInstance] pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
+    [HybridStackPlugin pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
         NSLog(@"返回结果:%@", [self convertToJsonData:dict]);
     }];
 }

@@ -15,7 +15,7 @@ public class App extends Application {
         //初始化Flutter
         FlutterMain.startInitialization(this);
         //注册路由到plugin
-        HybridStackPlugin.getInstance().addRoute("demo", DemoActivity.class);
-        HybridStackPlugin.getInstance().addRoute("demo2", Demo2Activity.class);
+        HybridStackPlugin.addRoute("demo", DemoActivity.class);
+        HybridStackPlugin.addRoute("demo2", Demo2Activity.class);
     }
 }

@@ -42,11 +42,11 @@
   }
 }
 
-- (void)addRoute:(NSString *)pageId clazz:(Class)clazz {
++ (void)addRoute:(NSString *)pageId clazz:(Class)clazz {
     [[HSRouter sharedInstance] addRoute:pageId clazz:clazz];
 }
 
-- (void)pushFlutterPage:(NSString *)pageId args:(NSDictionary *)args block:(HSPageResult)block{
++ (void)pushFlutterPage:(NSString *)pageId args:(NSDictionary *)args block:(HSPageResult)block{
     [[HSRouter sharedInstance] openFlutterPage:pageId args:args block:block];
 }
 

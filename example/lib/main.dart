@@ -10,10 +10,10 @@ void main() {
   GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
   HybridStackPlugin.init(key: navKey);
   //添加会被Native端调用的路由，id可以是任意字符串
-  HybridStackPlugin.instance.addRoute('demo', (BuildContext context, Map args) {
+  HybridStackPlugin.addRoute('demo', (BuildContext context, Map args) {
     return MyApp(pageId: args['id'],);
   });
-  HybridStackPlugin.instance.addRoute('demo2', (BuildContext context, Map args) {
+  HybridStackPlugin.addRoute('demo2', (BuildContext context, Map args) {
     return Demo2(pageId: args['id'],);
   });
   // 必须添加navigatorKey，使得前面初始化的plugin可以监听路由跳转
@@ -23,7 +23,7 @@ void main() {
     home: EmptyPage(),
   ));
   // 必须告诉plugin启动成功，并跳转Native指定的页面
-  HybridStackPlugin.instance.startInitRoute();
+  HybridStackPlugin.startInitRoute();
 }
 
 class EmptyPage extends StatelessWidget {
@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                 title: Text('Open Native Page'),
                 onTap: () async {
                   //跳到Native页面，pageId是在Native端注册好的路由，args是要传到Native端的参数
-                  var result = await HybridStackPlugin.instance.pushNativePage("demo", {'key':'hybrid_stack','age':9});
+                  var result = await HybridStackPlugin.pushNativePage("demo", {'key':'hybrid_stack','age':9});
                   //使用async/await可以得到Native页面返回时的结果
                   print("main native result： $result");
                 },

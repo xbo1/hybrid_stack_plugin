@@ -58,7 +58,7 @@ static NSInteger sNativeVC2Idx = 0;
 - (void)onJumpFlutterPressed{
     NSMutableDictionary* args = [NSMutableDictionary dictionary];
     [args setObject:@12 forKey:@"id"];
-    [[HybridStackPlugin sharedInstance] pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
+    [HybridStackPlugin pushFlutterPage:@"demo" args:args block:^(NSDictionary* dict) {
         //        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"返回结果" message:[self convertToJsonData:dict] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         //        [alert show];
         NSLog(@"返回结果:%@", [self convertToJsonData:dict]);
