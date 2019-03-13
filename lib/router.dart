@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hybrid_stack_plugin/hybrid_stack_plugin.dart';
 
-
 class HSRouter {
   /// 初始化逻辑
   /// [key] 是获取 navigator state 用的
@@ -9,6 +8,7 @@ class HSRouter {
     _singleton = HSRouter._internal(key);
     return _singleton;
   }
+
   HSRouter._internal(GlobalKey<NavigatorState> key) {
     _navigatorStateKey = key;
   }
@@ -18,6 +18,7 @@ class HSRouter {
     }
     return _singleton;
   }
+
   static HSRouter _singleton;
 
   addRoute(String id, HSWidgetBuilder builder) {
@@ -25,6 +26,7 @@ class HSRouter {
   }
 
   Map<String, HSWidgetBuilder> _routes = Map();
+
   /// flutter 页面的导航器 NavigatorState
   GlobalKey<NavigatorState> _navigatorStateKey;
 
@@ -34,7 +36,7 @@ class HSRouter {
     registerPageObserver();
     var builder = _routes[pageId];
     if (builder == null) {
-      builder = (context, args)=>_RouteNotFoundPage(pageId, _routes);
+      builder = (context, args) => _RouteNotFoundPage(pageId, _routes);
     }
     var pageRoute = MaterialPageRoute(builder: (context) {
       return builder(context, args);
@@ -44,11 +46,10 @@ class HSRouter {
     return navState.push(pageRoute);
   }
 
-
   bool canPop() {
     int len = _navigatorHistory.length;
     if (len >= 1) {
-      var route = _navigatorHistory[len-1];
+      var route = _navigatorHistory[len - 1];
       if (_firstRoutes.containsKey(route)) {
         return false;
       }
@@ -85,11 +86,9 @@ class HSRouter {
       _firstRoutes.remove(route);
     }
   }
-
 }
 
 class _NavigationObserver extends NavigatorObserver {
-
   @override
   void didPush(Route route, Route previousRoute) {
     HSRouter.instance._navigatorHistory.add(route);
@@ -107,6 +106,7 @@ class _NavigationObserver extends NavigatorObserver {
     HSRouter.instance._navigatorHistory.remove(route);
     super.didRemove(route, previousRoute);
   }
+
   @override
   void didReplace({Route newRoute, Route oldRoute}) {
     int index = HSRouter.instance._navigatorHistory.indexOf(oldRoute);
@@ -114,10 +114,9 @@ class _NavigationObserver extends NavigatorObserver {
       HSRouter.instance._navigatorHistory.removeAt(index);
       HSRouter.instance._navigatorHistory.insert(index, newRoute);
     }
-    super.didReplace(newRoute:newRoute, oldRoute:oldRoute);
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
   }
 }
-
 
 class _RouteNotFoundPage extends StatelessWidget {
   final Map<String, HSWidgetBuilder> routes;
@@ -128,22 +127,27 @@ class _RouteNotFoundPage extends StatelessWidget {
     return Container(
       color: Colors.white,
       child: Center(
-        child: Column(
-          children: <Widget>[
-            Text("$pageId 页面丢失", style: TextStyle(color: Colors.black, fontSize: 24),),
-            Text("当前可用页面有：", style: TextStyle(color: Colors.black, fontSize: 24),),
-            Flexible(child:
-              ListView.builder(
-                itemCount: routes.length,
-                itemBuilder: (context, index) {
-                  var route = routes.keys.toList()[index];
-                  return Text(route, style: TextStyle(color: Colors.black, fontSize: 20));
-                },
-              )
-            )
-          ],
-        )
-      ),
+          child: Column(
+        children: <Widget>[
+          Text(
+            "$pageId 页面丢失",
+            style: TextStyle(color: Colors.black, fontSize: 24),
+          ),
+          Text(
+            "当前可用页面有：",
+            style: TextStyle(color: Colors.black, fontSize: 24),
+          ),
+          Flexible(
+              child: ListView.builder(
+            itemCount: routes.length,
+            itemBuilder: (context, index) {
+              var route = routes.keys.toList()[index];
+              return Text(route,
+                  style: TextStyle(color: Colors.black, fontSize: 20));
+            },
+          ))
+        ],
+      )),
     );
   }
 }

@@ -11,24 +11,24 @@ class HybridStackPlugin {
     if (_singleton == null) {
       _singleton = HybridStackPlugin._internal();
     }
-    HSRouter.init(key:key);
+    HSRouter.init(key: key);
     return _singleton;
   }
+
   static pushNativePage(String pageId, Map args) async {
-    var result = await instance._channel.invokeMethod('pushNativePage', {
-      'pageId':pageId,
-      'args':args
-    });
+    var result = await instance._channel
+        .invokeMethod('pushNativePage', {'pageId': pageId, 'args': args});
     return result;
   }
+
   static addRoute(String id, HSWidgetBuilder builder) {
     HSRouter.instance.addRoute(id, builder);
   }
+
   //called after runApp, only useful for Android
   static startInitRoute() {
     instance._channel.invokeMethod("startInitRoute");
   }
-
 
   static HybridStackPlugin _singleton;
   static HybridStackPlugin get instance {
@@ -53,33 +53,35 @@ class HybridStackPlugin {
       /// method name
       String methodName = call.method;
       switch (methodName) {
-        case "pushFlutterPage": {
-          Map args = call.arguments;
-          var ret = await HSRouter.instance.push(pageId: args['pageId'], args:args['args']);
-          print("push result: $ret");
-          _popFlutterActivity({
-            'data':ret
-          });
-          return ret;
-        }
+        case "pushFlutterPage":
+          {
+            Map args = call.arguments;
+            var ret = await HSRouter.instance
+                .push(pageId: args['pageId'], args: args['args']);
+            print("push result: $ret");
+            _popFlutterActivity({'data': ret});
+            return ret;
+          }
         //not used
-        case "requestUpdateTheme": {
-          // 请求更新主题色到 native 端，这里使用了一个测试接口，以后要注意
+        case "requestUpdateTheme":
+          {
+            // 请求更新主题色到 native 端，这里使用了一个测试接口，以后要注意
 //          var preTheme = SystemChrome.latestStyle;
 //          if (preTheme != null) {
 //            SystemChannels.platform.invokeMethod("SystemChrome.setSystemUIOverlayStyle", _toMap(preTheme));
 //          }
-          break;
-        }
-        case "popFlutterPage": {
-          /// 重写 onBackPressed
-          if (HSRouter.instance.canPop()) {
-            HSRouter.instance.doPop();
-            return true;
+            break;
           }
-          HSRouter.instance.doPop();
-          return false; //能pop返回true,否则返回false
-        }
+        case "popFlutterPage":
+          {
+            /// 重写 onBackPressed
+            if (HSRouter.instance.canPop()) {
+              HSRouter.instance.doPop();
+              return true;
+            }
+            HSRouter.instance.doPop();
+            return false; //能pop返回true,否则返回false
+          }
       }
     });
   }
