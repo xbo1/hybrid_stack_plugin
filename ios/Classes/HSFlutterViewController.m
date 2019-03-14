@@ -10,41 +10,61 @@
 #import "HybridStackPlugin.h"
 
 @interface HSFlutterViewController ()
-@property (nonatomic, strong) NSDictionary* args;
+@property (nonatomic, strong) FlutterViewController* flutterViewController;
 @end
 
 @implementation HSFlutterViewController
-- (instancetype)initWithEngineAndArgs:(FlutterEngine*)engine args:(NSDictionary*)args {
-    self = [super initWithEngine:engine nibName:nil bundle:nil];
+- (instancetype)initWithFlutter:(FlutterViewController*)flutterViewController {
+    self = [super init];
     if (self) {
-        self.args = args;
-        [self openFlutter];
+        self.flutterViewController = flutterViewController;
     }
     return self;
 }
+    
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     #ifdef DEBUG
     self.view.backgroundColor = [UIColor whiteColor];
     #endif
-    [[HSRouter sharedInstance] pushFlutterViewController:self];
 }
+
+- (BOOL)isFlutterAttatched
+{
+    return _flutterViewController.view.superview == self.view;
+}
+
+- (void)attachFlutter{
+    if ([self isFlutterAttatched]) {
+        return;
+    }
+    [_flutterViewController willMoveToParentViewController:nil];
+    [_flutterViewController removeFromParentViewController];
+    [_flutterViewController didMoveToParentViewController:nil];
+    
+    [_flutterViewController willMoveToParentViewController:self];
+    _flutterViewController.view.frame = self.view.bounds;
+    [self.view addSubview: _flutterViewController.view];
+    [self addChildViewController:_flutterViewController];
+    [_flutterViewController didMoveToParentViewController:self];
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBarHidden = TRUE;
-    //must call setViewController, or page will not updated
-    [[self engine] setViewController:self];
+    
+    [self attachFlutter];
     [super viewWillAppear:animated];
 }
-//- (void)dealloc{
-//    [[HSRouter sharedInstance] popFlutterViewController];
+
+//- (void)viewDidAppear:(BOOL)animated{
+//    [self attachFlutter];
+//    [super viewDidAppear:animated];
 //}
 
-- (void)openFlutter {
-    if (self.args != nil) {
-        NSString* pageId = [self.args objectForKey:@"pageId"];
-        NSDictionary* dict = [self.args objectForKey:@"args"];
-        [[HybridStackPlugin sharedInstance] showFlutterPage:pageId args:dict result:nil];
+- (void)dealloc{
+    if (_flutterViewController != nil) {
+        _flutterViewController = nil;
     }
 }
 

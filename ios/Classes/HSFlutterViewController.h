@@ -10,8 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HSFlutterViewController : FlutterViewController
-- (instancetype)initWithEngineAndArgs:(FlutterEngine*)engine args:(NSDictionary*)args;
+@interface HSFlutterViewController : UIViewController
+
+- (instancetype)initWithFlutter:(FlutterViewController*)flutterViewController;
+
 @property (nonatomic, strong) HSPageResult resultBlock;
 
 @end

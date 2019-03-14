@@ -25,9 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)finishFlutterViewController:(NSDictionary *)args;
 
-- (void)pushFlutterViewController:(HSFlutterViewController *)vc;
-- (void)popFlutterViewController;
-
 @end
 
 NS_ASSUME_NONNULL_END

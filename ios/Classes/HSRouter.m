@@ -11,10 +11,8 @@
 @interface HSRouter()
 
 @property (nonatomic, strong) NSMutableDictionary* routes;
-
-//@property (nonatomic, strong) NSMutableArray* flutterViewControllers;
-
 @property (nonatomic, strong) FlutterEngine* flutterEngine;
+@property (nonatomic, strong) FlutterViewController* flutterViewController;
 @end
 
 @implementation HSRouter
@@ -24,7 +22,6 @@
     dispatch_once(&onceToken, ^{
         sharedInst = [[HSRouter alloc] init];
         sharedInst.routes = [[NSMutableDictionary alloc] init];
-//        sharedInst.flutterViewControllers = [[NSMutableArray alloc] init];
         [sharedInst initFlutter];
     });
     return sharedInst;
@@ -45,6 +42,7 @@
                     withObject:_flutterEngine];
     }
 #pragma clang diagnostic pop
+    _flutterViewController = [[FlutterViewController alloc] initWithEngine:_flutterEngine nibName:nil bundle:nil];
 }
 
 - (void)addRoute:(NSString *)pageId clazz:(Class)clazz {
@@ -53,15 +51,13 @@
 
 - (void)openFlutterPage:(NSString *)pageId args:(NSDictionary *)args block:(HSPageResult)block{
     //push Flutter ViewController
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setValue:pageId forKey:@"pageId"];
-    [dict setValue:args forKey:@"args"];
-    HSFlutterViewController *vc = [[HSFlutterViewController alloc] initWithEngineAndArgs:_flutterEngine args:dict];
+    [[HybridStackPlugin sharedInstance] showFlutterPage:pageId args:args result:nil];
     
-    UIViewController *curVC = [self topViewController];
+    HSFlutterViewController *vc = [[HSFlutterViewController alloc] initWithFlutter:_flutterViewController];
     if (block != nil) {
         vc.resultBlock = block;
     }
+    UIViewController *curVC = [self topViewController];
     if (curVC.navigationController != nil) {
         [curVC.navigationController pushViewController:vc animated:YES];
     }
@@ -69,6 +65,24 @@
         [curVC presentViewController:vc animated:YES completion:nil];
     }
 }
+
+- (void)finishFlutterViewController:(NSDictionary *)args {
+    //NSLog(@"called finish flutter view controller by dart");
+    UIViewController *curVC = [self topViewController];
+    if([curVC isKindOfClass:[HSFlutterViewController class]]){
+        HSFlutterViewController *vc = (HSFlutterViewController *)curVC;
+        if (vc.resultBlock != nil) {
+            vc.resultBlock(args);
+        }
+        if (curVC.navigationController != nil) {
+            [curVC.navigationController popViewControllerAnimated:YES];
+        }
+        else {
+            [curVC dismissViewControllerAnimated:YES completion:nil];
+        }
+    }
+}
+
 
 - (void)openNativePage:(NSString *)pageId args:(NSDictionary *)args result:(FlutterResult)result {
     Class clazz = [[self routes] objectForKey:pageId];
@@ -89,6 +103,7 @@
         [curVC presentViewController:vc animated:YES completion:nil];
     }
 }
+
 - (BOOL)setChannelResultProperty:(Class)clazz obj:(id)obj value:(id)value {
     BOOL hasArgs = NO;
     unsigned int methodCount = 0;
@@ -141,29 +156,5 @@
         return [self _topViewController:[(UITabBarController *)vc selectedViewController]];
     }
     return vc;
-}
-
-- (void)finishFlutterViewController:(NSDictionary *)args {
-    //NSLog(@"called finish flutter view controller by dart");
-    UIViewController *curVC = [self topViewController];
-    if([curVC isKindOfClass:[HSFlutterViewController class]]){
-        HSFlutterViewController *vc = (HSFlutterViewController *)curVC;
-        if (vc.resultBlock != nil) {
-            vc.resultBlock(args);
-        }
-        if (curVC.navigationController != nil) {
-            [curVC.navigationController popViewControllerAnimated:YES];
-        }
-        else {
-            [curVC dismissViewControllerAnimated:YES completion:nil];
-        }
-    }
-}
-
-- (void)pushFlutterViewController:(HSFlutterViewController *)vc {
-//    [self.flutterViewControllers addObject:vc];
-}
-- (void)popFlutterViewController {
-//    [self.flutterViewControllers removeLastObject];
 }
 @end
