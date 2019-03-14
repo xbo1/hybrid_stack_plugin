@@ -25,6 +25,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    #ifdef DEBUG
+    self.view.backgroundColor = [UIColor whiteColor];
+    #endif
     [[HSRouter sharedInstance] pushFlutterViewController:self];
 }
 - (void)viewWillAppear:(BOOL)animated{

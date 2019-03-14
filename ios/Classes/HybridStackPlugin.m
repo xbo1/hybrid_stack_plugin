@@ -3,6 +3,9 @@
 
 @interface HybridStackPlugin()
 @property (nonatomic,strong) FlutterMethodChannel* methodChannel;
+@property (nonatomic,strong) NSString* firstPageId;
+@property (nonatomic,strong) NSDictionary* firstArgs;
+@property (nonatomic,strong) FlutterResult firstResult;
 @end
 
 @implementation HybridStackPlugin
@@ -33,7 +36,7 @@
       [[HSRouter sharedInstance] finishFlutterViewController:call.arguments];
   }
   else if([@"startInitRoute" isEqualToString:call.method]) {
-//      [self showFlutterPage:self.firstPageId args:self.firstArgs result:self.firstResult];
+      [self showFlutterPage:self.firstPageId args:self.firstArgs result:self.firstResult];
   }
   else if ([@"getPlatformVersion" isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
@@ -62,6 +65,12 @@
 
 //首次启动FlutterViewController后，路由到指定的页面
 - (void)showFlutterPage:(NSString *)pageId args:(NSDictionary *)args result:(FlutterResult)result{
+    if (pageId == nil) {
+        return;
+    }
+    self.firstPageId = pageId;
+    self.firstArgs = args;
+    self.firstResult = result;
     if (self.methodChannel != nil) {
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         [dict setValue:args forKey:@"args"];

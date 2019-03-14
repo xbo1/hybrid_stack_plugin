@@ -5,7 +5,7 @@ Demonstrates how to use the hybrid_stack_plugin plugin.
 ## 使用
 在pubspec.yaml添加依赖
 
-    hybrid_stack_plugin: ^0.0.3
+    hybrid_stack_plugin: ^0.0.4
 在执行"flutter packages get"后，您可以查看包中的example，了解如何使用它。
 
 ### flutter

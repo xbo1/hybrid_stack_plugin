@@ -36,7 +36,15 @@
     }
     _flutterEngine = [[FlutterEngine alloc] initWithName:@"default_engine" project:nil];
     [_flutterEngine runWithEntrypoint:nil];
-    [NSClassFromString(@"GeneratedPluginRegistrant") performSelector:NSSelectorFromString(@"registerWithRegistry:") withObject:_flutterEngine];
+//    [NSClassFromString(@"GeneratedPluginRegistrant") performSelector:NSSelectorFromString(@"registerWithRegistry:") withObject:_flutterEngine];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    Class clazz = NSClassFromString(@"GeneratedPluginRegistrant");
+    if (clazz && [clazz respondsToSelector:NSSelectorFromString(@"registerWithRegistry:")]) {
+        [clazz performSelector:NSSelectorFromString(@"registerWithRegistry:")
+                    withObject:_flutterEngine];
+    }
+#pragma clang diagnostic pop
 }
 
 - (void)addRoute:(NSString *)pageId clazz:(Class)clazz {
