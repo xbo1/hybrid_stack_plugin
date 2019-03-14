@@ -145,7 +145,7 @@ public void onBackPressed() {
 
 
 ## 已知问题
-1. iOS真机调试时，从Native调用Flutter，只有第一次进入图片能正常显示，模拟器测试正常。不使用本plugin也有同样问题，待Flutter官方解决。
+1. ~~iOS真机调试时，从Native调用Flutter，只有第一次进入图片能正常显示，模拟器测试正常。不使用本plugin也有同样问题，待Flutter官方解决。~~ 已通过全局FlutterViewController规避
 2. MaterialPageRoute中不要执行复杂操作
 ```
 Navigator.push(context, MaterialPageRoute(builder: (context) {
